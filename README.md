@@ -11,5 +11,6 @@ Needed:
 - pdftoppm library
 
 How to use it?
+First, create a directory named ```./data/``` and store your PDF in it. Then, launch the script:
 - ```sh pdf2txt.sh -t```: TXT format as output
 - ```sh pdf2txt.sh -h```: HTML format as output
