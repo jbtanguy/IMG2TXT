@@ -4,6 +4,7 @@
 # python3
 # virtualenv
 
+echo "add '-h' to have html file as output"
 outType=$1
 
 # 1. Environnement virtuel
@@ -32,10 +33,10 @@ for file in `ls ./data/*.pdf`; do pdftoppm -png $file $file; done
 for file in `ls ./data/*.png`; do kraken -i $file $file"_bin.png" binarize; done
 
 # 5. Segmentation et OCR
-if [ $outType = "-t" ]; then
-	for file in `ls ./data/*_bin.png`; do kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
-else
+if [ $outType = "-h" ]; then
 	for file in `ls ./data/*_bin.png`; do kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
+else
+	for file in `ls ./data/*_bin.png`; do kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
 fi
 
 # 6. Rangement des fichiers de sorties
