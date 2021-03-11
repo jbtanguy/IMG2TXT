@@ -13,7 +13,7 @@ It is available at: https://github.com/e-ditiones/OCR17
 
 ## How to use it?
 
-First, create a directory named ```./data/``` and store your PDF in it. Then, launch the script with the following arguments.
+Launch the script with the following arguments.
 
 ### Argument 1
 - ```-p```: PDFs in ```./data/```
@@ -24,6 +24,9 @@ First, create a directory named ```./data/``` and store your PDF in it. Then, la
 - ```-t```: TXT format as output
 - ```-h```: HTML format as output
 
+### Argument 3
+Path to the directory where images are stored.
+
 ### Examples
-- ```sh pdf2txt.sh -p -t```: OCR is processed on PDF documents and the output is in TXT format
-- ```sh pdf2txt.sh -j -h```: OCR is processed on JPG documents and the output is in HTML format
+- ```sh pdf2txt.sh -p -t ./data/```: OCR is processed on PDF documents stored in ```./data/``` and the output is in TXT format
+- ```sh pdf2txt.sh -j -h ./data/```: OCR is processed on JPG documents stored in ```./data/``` and the output is in HTML format
