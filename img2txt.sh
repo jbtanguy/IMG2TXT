@@ -6,6 +6,7 @@
 
 inType=$1 # -p (PDF) -j (JPG) -t (TIF)
 outType=$2 # -t (TXT) -h (HTML)
+dir_path=$3
 
 # 1. Environnement virtuel
 if [ ! -d "./venv_kraken/" ]; then
@@ -28,23 +29,23 @@ fi
 
 # 3. Segmentation des pages
 if [ $inType = "-p" ]; then
-	for file in `ls ./data/*.pdf`; do pdftoppm -png $file $file; done
+	for file in `ls $dir_path*.pdf`; do pdftoppm -png $file $file; done
 fi
 
 # 4. Binarisation des images
 if [ $inType = "-p" ]; then
-	for file in `ls ./data/*.png`; do kraken -i $file $file"_bin.png" binarize; done
+	for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
 elif [ $inType = "-j" ]; then
-	for file in `ls ./data/*.jpg`; do kraken -i $file $file"_bin.png" binarize; done
+	for file in `ls $dir_path*.jpg`; do kraken -i $file $file"_bin.png" binarize; done
 elif [ $inType = "-t" ]; then
-	for file in `ls ./data/*.tif`; do kraken -i $file $file"_bin.png" binarize; done
+	for file in `ls $dir_path*.tif`; do kraken -i $file $file"_bin.png" binarize; done
 fi
 
 # 5. Segmentation et OCR
 if [ $outType = "-t" ]; then
-	for file in `ls ./data/*_bin.png`; do kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
+	for file in `ls $dir_path*_bin.png`; do kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
 else
-	for file in `ls ./data/*_bin.png`; do kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
+	for file in `ls $dir_path*_bin.png`; do kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
 fi
 
 # 6. Rangement des fichiers de sorties
@@ -54,28 +55,13 @@ if [ -d "./out/" ]; then
 fi
 # Création des dossiers pour les output
 mkdir ./out/
-if [ $inType = "-p" ]; then
-	mkdir ./out/pdf/
-elif [ $inType = "-j" ]; then
-	mkdir ./out/jpg/
-elif [ $inType = "-t" ]; then
-	mkdir ./out/tif/
-fi
 mkdir ./out/png/
 if [ $outType = "-h" ]; then
 	mkdir ./out/html/
 else
 	mkdir ./out/txt/
 fi
-cd ./data/
-# PDF
-if [ $inType = "-p" ]; then
-	for file in `ls *.pdf`; do mv $file ./../out/pdf/$file; done
-elif [ $inType = "-j" ]; then
-	for file in `ls *.jpg`; do mv $file ./../out/jpg/$file; done
-elif [ $inType = "-t" ]; then
-	for file in `ls *.tif`; do mv $file ./../out/tif/$file; done
-fi
+cd $dir_path
 # PNG 
 for file in `ls *.png`; do mv $file ./../out/png/$file; done
 # HTML
