@@ -32,5 +32,5 @@ Path to the directory where images are stored.
 - ```-t```: Tesseract
 
 ### Examples
-- ```sh pdf2txt.sh -p -t ./data/ -k```: OCR is processed with Kraken on PDF documents stored in ```./data/``` and the output is in TXT format
-- ```sh pdf2txt.sh -j -h ./data/ -t```: OCR is processed with Tesseract on JPG documents stored in ```./data/``` and the output is in HTML format
+- ```sh img2txt.sh -p -t ./data/ -k```: OCR is processed with Kraken on PDF documents stored in ```./data/``` and the output is in TXT format
+- ```sh img2txt.sh -j -h ./data/ -t```: OCR is processed with Tesseract on JPG documents stored in ```./data/``` and the output is in HTML format
