@@ -43,7 +43,7 @@ fi
 if [ $engine = "-k" ]; then
 	if [ $inType = "-p" ]; then
 		for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
-	if [ $inType = "-P" ]; then
+	elif [ $inType = "-P" ]; then
 		for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
 	elif [ $inType = "-j" ]; then
 		for file in `ls $dir_path*.jpg`; do kraken -i $file $file"_bin.png" binarize; done
