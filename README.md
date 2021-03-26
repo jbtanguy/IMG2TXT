@@ -17,6 +17,7 @@ Launch the script with the following arguments.
 
 ### Argument 1
 - ```-p```: PDFs in ```./data/```
+- ```-P```: PNGs in ```./data/```
 - ```-j```: JPGs in ```./data/```
 - ```-t```: TIFFs in ```./data/```
 

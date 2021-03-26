@@ -4,7 +4,7 @@
 # python3
 # virtualenv
 
-inType=$1 # -p (PDF) -j (JPG) -t (TIF)
+inType=$1 # -p (PDF) -j (JPG) -P (PNG) -t (TIF)
 outType=$2 # -t (TXT) -h (HTML)
 dir_path=$3
 engine=$4 # -k (KRAKEN), -t (TESSERACT)
@@ -14,8 +14,8 @@ if [ $engine = "-k" ]; then
 	if [ ! -d "./venv_kraken/" ]; then
 		echo "Création de l'environnment virtuel pour accueillir Kraken."
 		mkdir ./venv_kraken/
-		virtualenv -p python3 venv_kraken
-		. ./venv_kraken/bin/activate
+		python3 -m venv ./venv_kraken/
+		./venv_kraken/bin/activate
 		echo "Environnement virtuel venv_kraken créé.\n\nTéléchargement de Kraken."
 		pip3 install kraken
 	else
@@ -43,6 +43,8 @@ fi
 if [ $engine = "-k" ]; then
 	if [ $inType = "-p" ]; then
 		for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
+	if [ $inType = "-P" ]; then
+		for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
 	elif [ $inType = "-j" ]; then
 		for file in `ls $dir_path*.jpg`; do kraken -i $file $file"_bin.png" binarize; done
 	elif [ $inType = "-t" ]; then
@@ -62,6 +64,8 @@ elif [ $engine = "-t" ]; then
 	# ici html ça sera un fichier alto
 	if [ $inType = "-p" ]; then
 		for file in `ls $dir_path*.png`; do python3 tesseract_ocr.py $file $outType; done # if $outType -t --> TEXT if $outType -h --> ALTO
+	elif [ $inType = "-P" ]; then
+		for file in `ls $dir_path*.png`; do python3 tesseract_ocr.py $file $outType; done 
 	elif [ $inType = "-j" ]; then
 		for file in `ls $dir_path*.jpg`; do python3 tesseract_ocr.py $file $outType; done
 	elif [ $inType = "-t" ]; then
