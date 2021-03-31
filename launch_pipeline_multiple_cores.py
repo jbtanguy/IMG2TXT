@@ -14,10 +14,10 @@ def get_extension(t, in_out, engine):
         if engine == '-t': return 'alto'
         else: return 'html'
     else: return 'x'
-    
+
 def has_all_ocr(path, inType, outType, engine):
-    ext_in = get_extension(inType, in_out='in', engine)
-    ext_out = get_extension(outType, in_out='out', engine)
+    ext_in = get_extension(inType, in_out='in', engine=engine)
+    ext_out = get_extension(outType, in_out='out', engine=engine)
     has_all = False
     liste_in = glob.glob(f"{path}/*." + ext_in)
     img = len(liste_in)
