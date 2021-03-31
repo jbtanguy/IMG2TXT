@@ -26,12 +26,15 @@ Launch the script with the following arguments.
 - ```-h```: HTML format as output
 
 ### Argument 3
-Path to the directory where images are stored.
-
-### Argument 4
 - ```-k```: Kraken
 - ```-t```: Tesseract
 
+### Argument 4
+Paths to the directories where images are stored.
+Ex.: ```./data/*/jpg/``` the ```*``` means all the directories in ./data/ that has got a jpg/ directory in it.
+
+
+
 ### Examples
-- ```sh img2txt.sh -p -t ./data/ -k```: OCR is processed with Kraken on PDF documents stored in ```./data/``` and the output is in TXT format
-- ```sh img2txt.sh -j -h ./data/ -t```: OCR is processed with Tesseract on JPG documents stored in ```./data/``` and the output is in HTML format
+- ```python3 launch_pipeline_multiple_cores -p -t -k ./data/*/pdf/ ```: OCR is processed with Kraken on PDF documents stored in ```./data/*/pdf/``` directories and the output is in TXT format
+- ```python3 launch_pipeline_multiple_cores -j -h -t ./data/*/jpg/```: OCR is processed with Tesseract on JPG documents stored in ```./data/*/jpg/``` directories and the output is in HTML format
