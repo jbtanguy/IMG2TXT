@@ -41,7 +41,7 @@ if __name__ == '__main__':
         while i < len(paths):
             batch = paths[i:i+NB_core]
             list_cmd = ["./img2txt.sh " + inType + " " + outType + " " + engine + " %s/" % path for path in batch]
-            cmd = " & ".join(liste)
+            cmd = " & ".join(list_cmd)
             os.system(cmd)
             i += NB_core
     else:
