@@ -6,8 +6,9 @@
 
 inType=$1 # -p (PDF) -j (JPG) -P (PNG) -t (TIF)
 outType=$2 # -t (TXT) -h (HTML)
-dir_path=$3
-engine=$4 # -k (KRAKEN), -t (TESSERACT)
+engine=$3 # -k (KRAKEN), -t (TESSERACT)
+dir_path=$4
+
 
 # 1. Environnement virtuel
 if [ $engine = "-k" ]; then
@@ -71,34 +72,4 @@ elif [ $engine = "-t" ]; then
 	elif [ $inType = "-t" ]; then
 		for file in `ls $dir_path*.tif`; do python3 tesseract_ocr.py $file $outType; done
 	fi
-fi
-
-# 6. Rangement des fichiers de sorties
-# Suppression des outputs des processus antérieurs
-if [ -d "./out/" ]; then
-	rm -R ./out/
-fi
-# Création des dossiers pour les output
-mkdir ./out/
-mkdir ./out/png/
-if [ $outType = "-h" ]; then
-	if [ $engine = "-k" ]; then
-		mkdir ./out/html/
-	elif [ $engine = "-t" ]; then # avec tesseract on n'a pas une sortie html mais une sortie alto xml
-		mkdir ./out/alto/
-	fi
-else
-	mkdir ./out/txt/
-fi
-# PNG 
-for file in `ls $dir_path*.png`; do mv $file ./out/png/$file; done
-# HTML
-if [ $outType = "-h" ]; then
-	if [ $engine = "-k" ]; then
-		for file in `ls $dir_path*.html`; do mv $file ./out/html/$file; done
-	elif [ $engine = "-t" ]; then # avec tesseract on n'a pas une sortie html mais une sortie alto xml
-		for file in `ls $dir_path*.alto`; do mv $file ./out/alto/$file; done
-	fi
-else # TXT
-	for file in `ls $dir_path*.txt`; do mv $file ./out/txt/$file; done
 fi
