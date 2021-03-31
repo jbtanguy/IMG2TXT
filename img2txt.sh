@@ -56,9 +56,9 @@ fi
 # 5. Segmentation et OCR
 if [ $engine = "-k" ]; then
 	if [ $outType = "-t" ]; then
-		for file in `ls $dir_path*_bin.png`; do kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
+		for file in `ls $dir_path*_bin.png`; do timeout -m 30 kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
 	else
-		for file in `ls $dir_path*_bin.png`; do kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
+		for file in `ls $dir_path*_bin.png`; do timeout -m 30 kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
 	fi
 elif [ $engine = "-t" ]; then
 	# code pour lancer tesseract avec un fichier de config
