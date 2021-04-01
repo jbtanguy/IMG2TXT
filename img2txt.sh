@@ -41,24 +41,24 @@ if [ $inType = "-p" ]; then
 fi
 
 # 4. Binarisation des images pour Kraken
-#if [ $engine = "-k" ]; then
-#	if [ $inType = "-p" ]; then
-#		for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
-#	elif [ $inType = "-P" ]; then
-#		for file in `ls $dir_path*.png`; do kraken -i $file $file"_bin.png" binarize; done
-#	elif [ $inType = "-j" ]; then
-#		for file in `ls $dir_path*.jpg`; do kraken -i $file $file"_bin.png" binarize; done
-#	elif [ $inType = "-t" ]; then
-#		for file in `ls $dir_path*.tif`; do kraken -i $file $file"_bin.png" binarize; done
-#	fi
-#fi
+if [ $engine = "-k" ]; then
+	if [ $inType = "-p" ]; then
+		for file in `ls $dir_path*.png`; do timeout 600 kraken -i $file $file"_bin.png" binarize; done
+	elif [ $inType = "-P" ]; then
+		for file in `ls $dir_path*.png`; do timeout 600 kraken -i $file $file"_bin.png" binarize; done
+	elif [ $inType = "-j" ]; then
+		for file in `ls $dir_path*.jpg`; do timeout 600 kraken -i $file $file"_bin.png" binarize; done
+	elif [ $inType = "-t" ]; then
+		for file in `ls $dir_path*.tif`; do timeout 600 kraken -i $file $file"_bin.png" binarize; done
+	fi
+fi
 
 # 5. Segmentation et OCR
 if [ $engine = "-k" ]; then
 	if [ $outType = "-t" ]; then
-		for file in `ls $dir_path*_bin.png`; do timeout 180 kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
+		for file in `ls $dir_path*_bin.png`; do timeout 600 kraken -i $file $file".txt" segment ocr -m ./CORPUS17.mlmodel; done
 	else
-		for file in `ls $dir_path*_bin.png`; do timeout 180 kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
+		for file in `ls $dir_path*_bin.png`; do timeout 600 kraken -i $file $file".html" segment ocr -m ./CORPUS17.mlmodel -h; done
 	fi
 elif [ $engine = "-t" ]; then
 	# code pour lancer tesseract avec un fichier de config
