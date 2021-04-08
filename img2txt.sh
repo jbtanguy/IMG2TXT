@@ -16,7 +16,7 @@ if [ $engine = "-k" ]; then
 		echo "Création de l'environnment virtuel pour accueillir Kraken."
 		mkdir ./venv_kraken/
 		python3 -m venv ./venv_kraken/
-		./venv_kraken/bin/activate
+		. ./venv_kraken/bin/activate
 		echo "Environnement virtuel venv_kraken créé.\n\nTéléchargement de Kraken."
 		pip3 install kraken
 	else
