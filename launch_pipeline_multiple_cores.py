@@ -20,11 +20,15 @@ def has_all_ocr(path, inType, outType, engine):
     ext_out = get_extension(outType, in_out='out', engine=engine)
     has_all = False
     liste_in = glob.glob(f"{path}/*." + ext_in)
-    img = len(liste_in)
     liste_out = glob.glob(f"{path}/*." + ext_out)
+    if 'pdf' in ext_in:
+        liste_out = [t.split('.pdf')[0] for t in liste_out]
+        liste_out = list(set(liste_out))
+    img = len(liste_in)
     ocr = len(liste_out)
     if ocr == img:
         has_all = True
+
     return has_all
 
 if __name__ == '__main__':
