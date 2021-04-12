@@ -2,6 +2,7 @@ import os
 import sys
 import glob
 import re
+from PyPDF2 import PdfFileReader
 
 def get_extension(t, in_out, engine):
     if t == '-p': return 'pdf'
@@ -19,12 +20,13 @@ def has_all_ocr(path, inType, outType, engine):
     ext_in = get_extension(inType, in_out='in', engine=engine)
     ext_out = get_extension(outType, in_out='out', engine=engine)
     has_all = False
-    liste_in = glob.glob(f"{path}/*." + ext_in)
-    liste_out = glob.glob(f"{path}/*." + ext_out)
     if 'pdf' in ext_in:
-        liste_out = [t.split('.pdf')[0] for t in liste_out]
-        liste_out = list(set(liste_out))
-    img = len(liste_in)
+        pdfs = glob.glob(f"{path}/*." + ext_in)
+        img = sum([PdfFileReader(open(p,'rb')).getNumPages() for p in pdfs])
+    else:
+        liste_in = glob.glob(f"{path}/*." + ext_in)
+        img = len(liste_in)
+    liste_out = glob.glob(f"{path}/*." + ext_out)
     ocr = len(liste_out)
     if ocr == img:
         has_all = True
