@@ -3,6 +3,7 @@ import sys
 import glob
 import re
 from PyPDF2 import PdfFileReader
+from datetime import datetime
 
 def get_extension(t, in_out, engine):
     if t == '-p': return 'pdf'
@@ -33,19 +34,31 @@ def has_all_ocr(path, inType, outType, engine):
 
     return has_all
 
+w = open("log.txt", "w")
 if __name__ == '__main__':
     if len(sys.argv) > 4:
         inType = sys.argv[1]
         outType = sys.argv[2]
         engine = sys.argv[3]
         paths = sys.argv[4:]
-        
+        print(paths)
+        if len(paths)==1:
+          path = paths[0]
+          for file_path in glob.glob(f"{path}*.pdf"):
+            newdir = re.sub(".pdf", "_path", file_path)
+            os.makedirs(newdir, exist_ok=True)
+            os.system(f"mv {file_path} {newdir}/")
+          paths = glob.glob(f"{path}/*path")
         paths = [path for path in paths if has_all_ocr(path, inType, outType, engine) == False]
 
         i = 0
         NB_core = 3
         while i < len(paths):
             batch = paths[i:i+NB_core]
+            print(batch)
+            now = datetime.now()
+            for b in batch:
+              w.write(f"{now}:{b}\n")
             list_cmd = ["./img2txt.sh " + inType + " " + outType + " " + engine + " %s/" % path for path in batch]
             cmd = " & ".join(list_cmd)
             os.system(cmd)
@@ -57,3 +70,4 @@ if __name__ == '__main__':
             "3: -k (Kraken), -t (Tesseract)\n",
             "4: paths to your data (intension paths, with *\n"
             )
+w.close()

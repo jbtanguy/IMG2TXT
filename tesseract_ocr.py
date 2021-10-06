@@ -13,7 +13,7 @@ if __name__ == '__main__':
 		# preprocessings
 		# Lire un fichier de paramètre pour simplifier les démarches
 		# ocr
-		out_name = img_path.split('.')[0] + ext
+		out_name = img_path.split('\.')[0] + ext
 		if ext == '.txt':
 			outFile = io.open(out_name, 'w')
 			txt = pytesseract.image_to_string(img)
