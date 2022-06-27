@@ -10,6 +10,7 @@ It is available at: https://github.com/e-ditiones/OCR17
 - python3
 - virtualenv
 - pdftoppm library
+- PyPDF2
 
 ## How to use it?
 
@@ -36,5 +37,5 @@ Ex.: ```./data/*/jpg/``` the ```*``` means all the directories in ./data/ that h
 
 
 ### Examples
-- ```python3 launch_pipeline_multiple_cores -p -t -k ./data/*/pdf/ ```: OCR is processed with Kraken on PDF documents stored in ```./data/*/pdf/``` directories and the output is in TXT format
-- ```python3 launch_pipeline_multiple_cores -j -h -t ./data/*/jpg/```: OCR is processed with Tesseract on JPG documents stored in ```./data/*/jpg/``` directories and the output is in HTML format
+- ```python3 launch_pipeline_multiple_cores.py -p -t -k ./data/*/pdf/ ```: OCR is processed with Kraken on PDF documents stored in ```./data/*/pdf/``` directories and the output is in TXT format
+- ```python3 launch_pipeline_multiple_cores.py -j -h -t ./data/*/jpg/```: OCR is processed with Tesseract on JPG documents stored in ```./data/*/jpg/``` directories and the output is in HTML format
