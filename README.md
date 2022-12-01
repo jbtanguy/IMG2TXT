@@ -12,6 +12,11 @@ It is available at: https://github.com/e-ditiones/OCR17
 - pdftoppm library
 - PyPDF2
 
+You can install all at once using the install.sh script :
+
+chmod +x install.sh
+
+./install.sh
 ## How to use it?
 
 Launch the script with the following arguments.
