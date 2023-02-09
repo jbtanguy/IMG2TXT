@@ -2,7 +2,8 @@ import os
 import sys
 import glob
 import re
-from PyPDF2 import PdfFileReader
+#TODO: use PdfReader
+from PyPDF2 import PdfReader
 from datetime import datetime
 
 def get_extension(t, in_out, engine):
@@ -21,12 +22,18 @@ def has_all_ocr(path, inType, outType, engine):
     ext_in = get_extension(inType, in_out='in', engine=engine)
     ext_out = get_extension(outType, in_out='out', engine=engine)
     has_all = False
-    if 'pdf' in ext_in:
-        pdfs = glob.glob(f"{path}/*." + ext_in)
-        img = sum([PdfFileReader(open(p,'rb')).getNumPages() for p in pdfs])
-    else:
+    #try:
+    if 2>1:
+      if 'pdf' in ext_in:
+        path_pdfs = glob.glob(f"{path}/*.pdf")
+        reader = PdfReader(open(path_pdfs[0],'rb'))#.pages()
+        img = sum([len(PdfReader(open(p,'rb')).pages) for p in path_pdfs])
+      else:
         liste_in = glob.glob(f"{path}/*." + ext_in)
         img = len(liste_in)
+    #except:
+    else:
+      return "Error"
     liste_out = glob.glob(f"{path}/*." + ext_out)
     ocr = len(liste_out)
     if ocr == img:
@@ -34,8 +41,9 @@ def has_all_ocr(path, inType, outType, engine):
 
     return has_all
 
-w = open("log.txt", "w")
+w_log = open("log.txt", "w")
 if __name__ == '__main__':
+    #TODO: add messages
     if len(sys.argv) > 4:
         inType = sys.argv[1]
         outType = sys.argv[2]
@@ -49,8 +57,12 @@ if __name__ == '__main__':
             os.makedirs(newdir, exist_ok=True)
             os.system(f"mv {file_path} {newdir}/")
           paths = glob.glob(f"{path}/*path")
-        paths = [path for path in paths if has_all_ocr(path, inType, outType, engine) == False]
-
+          print(paths)
+        path_status = [[path, has_all_ocr(path, inType, outType, engine)] for path in paths]
+        paths  = [path for path, status in path_status if status ==False]
+        errors = [path for path, status in path_status if status =="Error"]
+        print("NB errors:", len(errors))
+        w_log.write("ERROR_pdf:"+"\nERROR_pdf:".join(errors))
         i = 0
         NB_core = 3
         while i < len(paths):
@@ -58,7 +70,7 @@ if __name__ == '__main__':
             print(batch)
             now = datetime.now()
             for b in batch:
-              w.write(f"{now}:{b}\n")
+              w_log.write(f"{now}:{b}\n")
             list_cmd = ["./img2txt.sh " + inType + " " + outType + " " + engine + " %s/" % path for path in batch]
             cmd = " & ".join(list_cmd)
             os.system(cmd)
@@ -70,4 +82,4 @@ if __name__ == '__main__':
             "3: -k (Kraken), -t (Tesseract)\n",
             "4: paths to your data (intension paths, with *\n"
             )
-w.close()
+w_log.close()
