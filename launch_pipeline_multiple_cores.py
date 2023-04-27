@@ -88,6 +88,13 @@ if __name__ == '__main__':
   for inType, liste_path in filtrage_input.items():
     for path in liste_path:
       if check_exists(path, outType)==False:
+        if engine=="kraken":
+          if "_bin.png" not in path:
+            path_bin = path +"_bin.png"
+            if os.path.exists(path_bin)==False:
+              print(f"Does not exist: {path_bin}")
+              continue
+            path = path_bin
         jobs.append(f"./img2txt_light.sh -{inType[0]} -{outType[0]} -{engine[0]} {path}")
       else:
         print(path, "done")
