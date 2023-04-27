@@ -1,6 +1,6 @@
 # IMG2TXT
 
-A short shell script to process OCR for XVIIth century french textual data using kraken. 
+A short shell script and Python wrapper to process OCR for XVIIth century french textual data using kraken and compare with Tesseract. 
 
 ## Model
 We use the OCR model published by: Simon Gabay, Thibault Clérice, Christian Reul. OCR17: Ground Truth and Models for 17th c. French Prints (and hopefully more). 2020. ⟨hal-02577236⟩
@@ -17,7 +17,19 @@ You can install all at once using the install.sh script :
 chmod +x install.sh
 
 ./install.sh
-## How to use it?
+
+## How to use (new version)?
+Usage: launch_pipeline_multiple_cores.py [options]
+
+### Options:
+  -h, --help            show this help message and exit
+  -c  --corpus_path=    Dossier comprenant les fichiers à océriser [pdf, jpg..]
+(default: dummy_data/)
+  -o, --out_html        passer le format de sortie en html (default: txt)
+  -k, --kraken          Use Kraken (default : Tesseract)
+  -F, --Force           Ré-océriser ce qui est déjà fait
+
+## How to use (old version)?
 
 Launch the script with the following arguments.
 
@@ -42,5 +54,5 @@ Ex.: ```./data/*/jpg/``` the ```*``` means all the directories in ./data/ that h
 
 
 ### Examples
-- ```python3 launch_pipeline_multiple_cores.py -p -t -k ./data/*/pdf/ ```: OCR is processed with Kraken on PDF documents stored in ```./data/*/pdf/``` directories and the output is in TXT format
-- ```python3 launch_pipeline_multiple_cores.py -j -h -t ./data/*/jpg/```: OCR is processed with Tesseract on JPG documents stored in ```./data/*/jpg/``` directories and the output is in HTML format
+- ```python3 launch_pipeline_multiple_cores_old.py -p -t -k ./data/*/pdf/ ```: OCR is processed with Kraken on PDF documents stored in ```./data/*/pdf/``` directories and the output is in TXT format
+- ```python3 launch_pipeline_multiple_cores_old.py -j -h -t ./data/*/jpg/```: OCR is processed with Tesseract on JPG documents stored in ```./data/*/jpg/``` directories and the output is in HTML format

@@ -2,84 +2,96 @@ import os
 import sys
 import glob
 import re
-#TODO: use PdfReader
 from PyPDF2 import PdfReader
 from datetime import datetime
+from optparse import OptionParser
 
-def get_extension(t, in_out, engine):
-    if t == '-p': return 'pdf'
-    elif t == '-j': return 'jpg'
-    elif t == '-P': return 'png'
-    elif t == '-t': 
-        if in_out == 'in': return 'tif'
-        else: return 'txt'
-    elif t == '-h':
-        if engine == '-t': return 'alto'
-        else: return 'html'
-    else: return 'x'
+def get_parser():
+    """Returns a command line parser
+    Returns:
+        OptionParser. The command line parser
+    """
+    parser = OptionParser()
+    parser.add_option("-c", "--corpus_path", dest="corpus_path",
+                      help="""Chemin vers le dossier comprenant les fichiers à océriser [pdf, jpg ..] default : dummy_corpus/""", type="string", default="dummy_corpus/")
+    parser.add_option('-o', '--out_html', help='Format sortie html (défaut: txt)', action='store_true', default = False)
+    parser.add_option('-k', '--kraken', help='Use Kraken (default : Tesseract)', action='store_true', default = False)
+    parser.add_option('-F', '--Force', help='Ré-océriser ce qui est déjà fait', action='store_true', default = False)
+    #TODO: ajouter filtrage de l'input (pdf et pas jpg ...)
+    return parser
+
+def check_exists(path, outType):
+  return os.path.exists(f"{path}.{outType}")
 
 def has_all_ocr(path, inType, outType, engine):
     ext_in = get_extension(inType, in_out='in', engine=engine)
     ext_out = get_extension(outType, in_out='out', engine=engine)
     has_all = False
     #try:
-    if 2>1:
-      if 'pdf' in ext_in:
-        path_pdfs = glob.glob(f"{path}/*.pdf")
-        reader = PdfReader(open(path_pdfs[0],'rb'))#.pages()
-        img = sum([len(PdfReader(open(p,'rb')).pages) for p in path_pdfs])
-      else:
-        liste_in = glob.glob(f"{path}/*." + ext_in)
-        img = len(liste_in)
-    #except:
+    if 'pdf' in ext_in:
+      path_pdfs = glob.glob(f"{path}/*.pdf")
+      img = sum([len(PdfReader(open(p,'rb')).pages) for p in path_pdfs])
     else:
-      return "Error"
+      liste_in = glob.glob(f"{path}/*." + ext_in)
+      img = len(liste_in)
+    #except:
     liste_out = glob.glob(f"{path}/*." + ext_out)
     ocr = len(liste_out)
     if ocr == img:
         has_all = True
-
     return has_all
 
+def get_extension(docs_a_oceriser):
+  out = {"pdf":[], "jpg":[], "jpeg":[], "png":[], "tiff":[], "autres":[]}
+  for path in docs_a_oceriser:
+    extension = re.split("\.", path)[-1]
+    if extension in out.keys():
+      out[extension].append(path)
+    else:
+      out["autres"].append(path)
+  print("-"*20)
+  for extension, elems in out.items():
+    if len(elems)>0:
+      print(f"{extension} \t: {len(elems)} files, {elems[0]}...")
+  print("-"*20)
+  out["Png"]=out["png"]#dfférencier avec pdf
+  del out ["png"]
+  del out ["autres"]
+  for path in out["pdf"]:
+    if "_path" not in path:
+      #toutes les pages au même endroit
+      png_paths = segment_and_move_pdf(path)
+      out["png"]+=png_paths
+  return {x:elems for x, elems in out.items() if len(elems)>0}
+
+def segment_and_move_pdf(path):
+  print(f"Segmenting {path}")
+  new_dir = re.split("/|\.", path)[-2]+"_path"
+  new_path = f"{options.corpus_path}/{new_dir}"
+  os.makedirs(new_path, exist_ok = True)
+  os.system(f"mv {path} {new_path}/")
+  pdf_path = glob.glob(f"{new_path}/*.pdf")[0]
+  os.system(f"pdftoppm -png {pdf_path} {pdf_path}")
+  return glob.glob(f"{new_path}/*.png")
+
+import tqdm
 w_log = open("log.txt", "w")
 if __name__ == '__main__':
-    #TODO: add messages
-    if len(sys.argv) > 4:
-        inType = sys.argv[1]
-        outType = sys.argv[2]
-        engine = sys.argv[3]
-        paths = sys.argv[4:]
-        print(paths)
-        if len(paths)==1:
-          path = paths[0]
-          for file_path in glob.glob(f"{path}*.pdf"):
-            newdir = re.sub(".pdf", "_path", file_path)
-            os.makedirs(newdir, exist_ok=True)
-            os.system(f"mv {file_path} {newdir}/")
-          paths = glob.glob(f"{path}/*path")
-          print(paths)
-        path_status = [[path, has_all_ocr(path, inType, outType, engine)] for path in paths]
-        paths  = [path for path, status in path_status if status ==False]
-        errors = [path for path, status in path_status if status =="Error"]
-        print("NB errors:", len(errors))
-        w_log.write("ERROR_pdf:"+"\nERROR_pdf:".join(errors))
-        i = 0
-        NB_core = 3
-        while i < len(paths):
-            batch = paths[i:i+NB_core]
-            print(batch)
-            now = datetime.now()
-            for b in batch:
-              w_log.write(f"{now}:{b}\n")
-            list_cmd = ["./img2txt.sh " + inType + " " + outType + " " + engine + " %s/" % path for path in batch]
-            cmd = " & ".join(list_cmd)
-            os.system(cmd)
-            i += NB_core
-    else:
-        print("You must give 4 arguments.\n",
-            "1: -p (PDF) or -j (JPG) or -P (PNG) or -t (TIF)\n",
-            "2: -t (TXT) or -h (HTML or XML-alto)\n",
-            "3: -k (Kraken), -t (Tesseract)\n",
-            "4: paths to your data (intension paths, with *\n"
-            )
+  options, _ = get_parser().parse_args()
+  print(options.corpus_path)
+  docs_a_oceriser  = glob.glob(f"{options.corpus_path}/*")
+  docs_a_oceriser += glob.glob(f"{options.corpus_path}/*_path/*.png")
+  outType = "html"   if options.out_html==True else "txt"
+  engine  = "kraken" if options.kraken  ==True else "tesseract"
+  filtrage_input = get_extension(docs_a_oceriser)
+  jobs = []
+  for inType, liste_path in filtrage_input.items():
+    for path in liste_path:
+      if check_exists(path, outType)==False:
+        jobs.append(f"./img2txt_light.sh -{inType[0]} -{outType[0]} -{engine[0]} {path}")
+      else:
+        print(path, "done")
+  print(f"{len(jobs)} left to process")
+  for job in tqdm.tqdm(jobs):
+    os.system(job)
 w_log.close()
