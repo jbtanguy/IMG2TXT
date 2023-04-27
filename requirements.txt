@@ -1,3 +1,5 @@
 virtualenv
 PyPDF2
 tqdm
+pytesseract
+opencv-python

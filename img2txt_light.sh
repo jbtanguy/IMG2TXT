@@ -56,5 +56,5 @@ if [ $engine = "-k" ]; then
 elif [ $engine = "-t" ]; then
 	# code pour lancer tesseract avec un fichier de config
 	# ici html ça sera un fichier alto
-	python3 tesseract_ocr.py $dir_path $outType;
+	python3.7 tesseract_ocr.py $dir_path $outType;
 fi
