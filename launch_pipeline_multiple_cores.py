@@ -61,7 +61,7 @@ def get_extension(docs_a_oceriser):
     if "_path" not in path:
       #toutes les pages au même endroit
       png_paths = segment_and_move_pdf(path)
-      out["png"]+=png_paths
+      out["Png"]+=png_paths
   return {x:elems for x, elems in out.items() if len(elems)>0}
 
 def segment_and_move_pdf(path):
