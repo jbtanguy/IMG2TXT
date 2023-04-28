@@ -79,10 +79,14 @@ w_log = open("log.txt", "w")
 if __name__ == '__main__':
   options, _ = get_parser().parse_args()
   print(options.corpus_path)
-  docs_a_oceriser  = glob.glob(f"{options.corpus_path}/*")
-  docs_a_oceriser += glob.glob(f"{options.corpus_path}/*_path/*.png")
-  outType = "html"   if options.out_html==True else "txt"
   engine  = "kraken" if options.kraken  ==True else "tesseract"
+  outType = "html"   if options.out_html==True else "txt"
+
+  engine_corpus_path = f"OCR={engine}_{options.corpus_path}/"
+  os.makedirs(engine_corpus_path, exist_ok = True)
+  os.system(f"cp -r {options.corpus_path}/* {engine_corpus_path}/") 
+  docs_a_oceriser  = glob.glob(f"{engine_corpus_path}/*")
+  docs_a_oceriser += glob.glob(f"{engine_corpus_path}/*_path/*.png")
   filtrage_input = get_extension(docs_a_oceriser)
   jobs = []
   for inType, liste_path in filtrage_input.items():
