@@ -24,12 +24,12 @@ Usage: launch_pipeline_multiple_cores.py [options]
 ### Options:
 - ```-c```  --corpus_path=    Dossier comprenant les fichiers à océriser [pdf, jpg..] default: dummy_data/
 - ```-o``` --out_html        passer le format de sortie en html (default: txt)
-- ```-k``` --kraken          Use Kraken (default : Tesseract)
-- ```-F``` --Force           Ré-océriser ce qui est déjà fait
+- ```-k``` --kraken          Océriser avec Kraken (default : Tesseract)
+- ```-F``` --Force           Ré-océriser ce qui a déjà été fait
 
 ## How to use (old version)?
 
-Launch the script with the following arguments.
+Launch the script launch_pipeline_multiple_cores_old.py with the following arguments :
 
 ### Argument 1
 - ```-p```: PDFs in ```./data/```
