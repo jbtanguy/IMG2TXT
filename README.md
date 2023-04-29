@@ -22,12 +22,10 @@ chmod +x install.sh
 Usage: launch_pipeline_multiple_cores.py [options]
 
 ### Options:
-  -h, --help            show this help message and exit
-  -c  --corpus_path=    Dossier comprenant les fichiers à océriser [pdf, jpg..]
-(default: dummy_data/)
-  -o, --out_html        passer le format de sortie en html (default: txt)
-  -k, --kraken          Use Kraken (default : Tesseract)
-  -F, --Force           Ré-océriser ce qui est déjà fait
+- ```-c```  --corpus_path=    Dossier comprenant les fichiers à océriser [pdf, jpg..] default: dummy_data/
+- ```-o``` --out_html        passer le format de sortie en html (default: txt)
+- ```-k``` --kraken          Use Kraken (default : Tesseract)
+- ```-F``` --Force           Ré-océriser ce qui est déjà fait
 
 ## How to use (old version)?
 
